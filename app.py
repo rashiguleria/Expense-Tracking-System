@@ -12,11 +12,14 @@ from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 import mysql.connector
 
+import db
+
 app = Flask(__name__)
 allowed_origins = [
     origin.strip()
     for origin in os.environ.get(
         "FRONTEND_ORIGINS",
+        "https://expenses-tracking-system-frontend-ju2d.onrender.com,"
         "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8081,http://localhost:8081",
     ).split(",")
     if origin.strip()
@@ -31,14 +34,7 @@ def get_db_connection():
     attempts = 0
     while attempts < 3:
         try:
-            connection = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="rashi15",
-                database="expenses_tracker",
-                autocommit=True,
-                connection_timeout=30,
-            )
+            connection = db.connect()
             connection.ping(reconnect=True, attempts=3, delay=1)
             return connection
         except mysql.connector.Error as exc:
@@ -49,6 +45,12 @@ def get_db_connection():
             time.sleep(1)
 
     raise RuntimeError("Unable to establish MySQL connection")
+
+
+try:
+    db.init_database()
+except Exception:
+    logger.exception("Database initialisation failed; check DB_* / DATABASE_URL settings")
 
 
 @app.errorhandler(Exception)
