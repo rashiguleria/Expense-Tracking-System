@@ -1,4 +1,10 @@
-export const BASE_URL = "http://127.0.0.1:5000";
+// Backend URL: set VITE_API_URL to override. Local dev uses Flask on :5000,
+// production builds default to the Render backend.
+export const BASE_URL: string =
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ||
+  (import.meta.env.DEV
+    ? "http://127.0.0.1:5000"
+    : "https://expense-tracking-system-backend-4lk0.onrender.com");
 export const DATA_CHANGED_EVENT = "expense-data-changed";
 
 export const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
