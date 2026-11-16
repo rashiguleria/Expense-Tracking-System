@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { Logo } from "@/components/AppShell";
+import { BASE_URL } from "@/lib/api";
 
 
 export const Route = createFileRoute("/login")({
@@ -26,7 +27,7 @@ function Login() {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/login", {
+    const response = await fetch(`${BASE_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
